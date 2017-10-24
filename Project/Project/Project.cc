@@ -98,7 +98,6 @@ int Winner() {
 				winner++;
 				if (winner == 4){
 					return 1;
-					cout << "blah" << endl;
 				}
 			}
 		}
@@ -108,7 +107,7 @@ int Winner() {
 
 
 int main() {
-	int hold = 1;
+	int result,hold = 1;
 	Player p1,p2;
 	FillBoard();
 	p1.setName();
@@ -117,11 +116,14 @@ int main() {
 		p1.setColumn();
 		//Display
 		DisplayBoard();
+		//Winner Checking
+		result = Winner();
+		cout << result << endl;
 		p2.setColumn();
 		//Display
 		DisplayBoard();
 		//check winner function
-		hold = 4;
+		//hold = 4;
 	}
 	
 }
