@@ -96,6 +96,10 @@ int Winner() {
 		for (int j = 1; j <= 7; j++) {
 			if (board[i][j] == board[i][j + 1]) {
 				winner++;
+				if (winner == 4){
+					return 1;
+					cout << "blah" << endl;
+				}
 			}
 		}
 	}
