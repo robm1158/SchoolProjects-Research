@@ -123,7 +123,7 @@ int main() {
 		//Display
 		DisplayBoard();
 		//check winner function
-		//hold = 4;
+		hold = 4;
 	}
 	
 }
