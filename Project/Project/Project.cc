@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string.h>
+#include <stdbool.h>
 using namespace std;
 
 char board[8][8];
@@ -27,8 +28,6 @@ class Player:public Game
 public:
 	void setColumn();
 
-
-
 protected:
 	int column;
 };
@@ -40,6 +39,11 @@ public:
 	void FillBoard();
 	void DisplayBoard();
 	int Winner();
+	bool UpDiagonal(int r, int c);
+	bool DownDiagonal(int r, int c);
+	bool Horizontal(int r, int c);
+	bool Vertical(int r, int c);
+
 
 };
 
@@ -90,33 +94,81 @@ void DisplayBoard()
 		cout << endl;
 	}
 }
+bool UpDiagonal(int r, int c){
+	if (board[r][c] == board[r - 1][c + 1] == board[r - 2][c + 2] == board[r - 3][c + 3]){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+bool Horizontal(int r, int c){
+	if ((board[r][c] == board[r][c + 1]) && (board[r][c] == board[r][c + 2]) && (board[r][c] == board[r][c + 3])) {
+		return true;
+	}
+		else{
+			return false;
+	}
+
+}
+bool Vertical(int r, int c){
+	if (board[r][c] == board[r - 1][c] == board[r-2][c] == board[r-3][c]){
+		return true;
+	}
+		else{
+			return false;
+		}
+}
+bool DownDiagonal(int r, int c){
+	int x = 6;
+	r = r - x;
+	if (board[r][c] == board[r + 1][c + 1] == board[r + 2][c + 2] == board[r + 3][c + 3]){
+		return true;
+	}
+	else{
+		x--;
+		return false;
+	}
+
+
+}
 int Winner() {
-	int winner = 0;
+	bool winner;
 	for (int i = 7; i >= 1; i--) {
 		for (int j = 1; j <= 7; j++) {
-			if (board[i][j] == board[i][j + 1]) {
-				winner++;
-				if (winner == 4){
-					return 1;
-				}
-				else
-				{
-					winner = 0;
-				}
+			winner = UpDiagonal(i, j);
+			if (winner == true){
+				return 1;
 			}
-			if (board[i][j] == board[i - 1][j]){
-				winner++;
-				if (winner == 4){
-					return 1;
-				}
-				else
-				{
-					winner = 0;
-				}
+			else if (winner == false){
+				return 0;
 			}
+			winner = DownDiagonal(i, j);
+			if (winner == true){
+				return 1;
+			}
+			else if (winner == false){
+				return 0;
+			}
+			winner = Vertical(i, j);
+			if (winner == true){
+				return 1;
+			}
+			else if (winner == false){
+				return 0;
+			}
+			winner = Horizontal(i, j);
+			if (winner == true){
+				return 1;
+			}
+			else if (winner == false){
+				return 0;
+			}
+			
 		}
 	}
 }
+
 
 
 
@@ -137,6 +189,8 @@ int main() {
 		//Display
 		DisplayBoard();
 		//check winner function
+		result = Winner();
+		cout << result << endl;
 		//hold = 4;
 	}
 	
