@@ -92,12 +92,26 @@ void DisplayBoard()
 }
 int Winner() {
 	int winner = 0;
-	for (int i = 1; i <= 7; i++) {
+	for (int i = 7; i >= 1; i--) {
 		for (int j = 1; j <= 7; j++) {
 			if (board[i][j] == board[i][j + 1]) {
 				winner++;
 				if (winner == 4){
 					return 1;
+				}
+				else
+				{
+					winner = 0;
+				}
+			}
+			if (board[i][j] == board[i - 1][j]){
+				winner++;
+				if (winner == 4){
+					return 1;
+				}
+				else
+				{
+					winner = 0;
 				}
 			}
 		}
@@ -123,7 +137,7 @@ int main() {
 		//Display
 		DisplayBoard();
 		//check winner function
-		hold = 4;
+		//hold = 4;
 	}
 	
 }
