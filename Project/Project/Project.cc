@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <stdbool.h>
+#include <climits>
 using namespace std;
 
 char board[8][8];
@@ -27,7 +28,7 @@ class Player:public Game
 {
 public:
 	void setColumn();
-
+	bool CheckDrop(int columnNumber, char player);
 protected:
 	int column;
 };
@@ -47,28 +48,82 @@ public:
 
 };
 
-void Player::setColumn() {
+void Player::setColumn()
+{
 	static int count = 0;
+	bool state;
 	count++;
 
-	//Player1
-	if (count%2 != 0) {
-		cout << "What column would you like to place the token in Player1 ?:" << endl;
+	while (true)
+	{
+		cout << name << ", What column would you like to place the token in ?" << endl;
 		cin >> column;
-		//if(board[row][column] == '_')
-		//row--
-		board[7][column] = 'x';
 
+		if (cin.fail())
+		{
+			cin.clear();
+			cin.ignore(INT_MAX, '\n');
+			continue;
+		}
+		break;
+	}
 
-
+	//Player1
+	if (count % 2 != 0)
+	{
+		// calls function CheckDrop to place token. If the drop is legal, function returns a 'true' and next player goes.
+		// if the column selected is out of bound or is already full, a 'false' is returned and user is prompted to enter
+		// another value until one obtained.
+		state = CheckDrop(column, 'x');
+		while (!state)
+		{
+			cin >> column;
+			state = CheckDrop(column, 'x');
+		}
 	}
 	//Player2
-	else {
-		cout << "What column would you like to place the token in Player2 ?:" << endl;
-		cin >> column;
-		board[7][column] = 'o';
-
-
+	else
+	{
+		// calls function CheckDrop to place token. If the drop is legal, function returns a 'true' and next player goes.
+		// if the column selected is out of bound or is already full, a 'false' is returned and user is prompted to enter
+		// another value until one obtained.
+		state = CheckDrop(column, 'o');
+		while (!state)
+		{
+			cin >> column;
+			state = CheckDrop(column, 'o');
+		}
+	}
+}
+// Function that checks and places the token of each player.
+bool Player::CheckDrop(int columnNumber, char player)
+{
+	// if statement to verify that the column bounds are not exceed. If they are, return a 'false'
+	if ((columnNumber >= 1) && (columnNumber <= 7))
+	{
+		// if statement to verify that column still has space. If there's no space, return a 'false'
+		if (board[1][columnNumber] == '_')
+		{
+			// for loop that starts at the bottom and checks for first available spot, once found puts token there
+			for (int i = 7; i >= 1; i--)
+			{
+				if (board[i][columnNumber] == '_')
+				{
+					board[i][columnNumber] = player;
+					return true;
+				}
+			}
+		}
+		else
+		{
+			cout << "column " << columnNumber << " is full; please try again" << endl;
+			return false;
+		}
+	}
+	else
+	{
+		cout << "out of bound; please try again" << endl;
+		return false;
 	}
 }
 void FillBoard()
@@ -103,7 +158,7 @@ bool UpDiagonal(int r, int c){
 	}
 }
 bool Horizontal(int r, int c){
-	if ((board[r][c] == board[r][c + 1]) && (board[r][c] == board[r][c + 2]) && (board[r][c] == board[r][c + 3])) {
+	if (((board[r][c] == board[r][c + 1]) && (board[r][c] == board[r][c + 2]) && (board[r][c] == board[r][c + 3])) != '_') {
 		return true;
 	}
 		else{
@@ -136,49 +191,40 @@ int Winner() {
 	bool winner;
 	for (int i = 7; i >= 1; i--) {
 		for (int j = 1; j <= 7; j++) {
-			winner = UpDiagonal(i, j);
+			//winner = UpDiagonal(i, j);
 			if (winner == true){
 				return 1;
 			}
-			else if (winner == false){
-				return 0;
-			}
-			winner = DownDiagonal(i, j);
+			//winner = DownDiagonal(i, j);
 			if (winner == true){
 				return 1;
 			}
-			else if (winner == false){
-				return 0;
-			}
-			winner = Vertical(i, j);
+			//winner = Vertical(i, j);
 			if (winner == true){
 				return 1;
-			}
-			else if (winner == false){
-				return 0;
 			}
 			winner = Horizontal(i, j);
 			if (winner == true){
 				return 1;
 			}
-			else if (winner == false){
-				return 0;
-			}
 			
 		}
+		return 0;
 	}
+	
 }
 
 
 
 
 int main() {
-	int result,hold = 1;
+	int result = 0,hold = 0;
 	Player p1,p2;
 	FillBoard();
 	p1.setName();
 	p2.setName();
-	while (hold == 1) {
+	while (result == 0) {
+		hold++;
 		p1.setColumn();
 		//Display
 		DisplayBoard();
@@ -191,7 +237,10 @@ int main() {
 		//check winner function
 		result = Winner();
 		cout << result << endl;
-		//hold = 4;
+		if (hold >= 49) {
+			cout << "No winner" << endl;
+			break;
+		}
 	}
 	
 }
