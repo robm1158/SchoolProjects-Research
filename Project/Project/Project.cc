@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <climits>
+#include<unistd.h>
 using namespace std;
 
 char board[8][8];
@@ -44,6 +45,7 @@ public:
 	bool DownDiagonal(int r, int c);
 	bool Horizontal(int r, int c);
 	bool Vertical(int r, int c);
+	void clearScreen();
 
 
 };
@@ -150,7 +152,7 @@ void DisplayBoard()
 	}
 }
 bool UpDiagonal(int r, int c){
-	if (board[r][c] == board[r - 1][c + 1] == board[r - 2][c + 2] == board[r - 3][c + 3]){
+	if ((board[r][c] == board[r - 1][c + 1]) && (board[r][c] == board[r - 2][c + 2]) && (board[r][c] == board[r - 3][c + 3]) && (board[r][c] != '_')){
 		return true;
 	}
 	else{
@@ -158,7 +160,7 @@ bool UpDiagonal(int r, int c){
 	}
 }
 bool Horizontal(int r, int c){
-	if (((board[r][c] == board[r][c + 1]) && (board[r][c] == board[r][c + 2]) && (board[r][c] == board[r][c + 3])) != '_') {
+	if ((board[r][c] == board[r][c + 1]) && (board[r][c] == board[r][c + 2]) && (board[r][c] == board[r][c + 3]) && (board[r][c] != '_')) {
 		return true;
 	}
 		else{
@@ -167,7 +169,7 @@ bool Horizontal(int r, int c){
 
 }
 bool Vertical(int r, int c){
-	if (board[r][c] == board[r - 1][c] == board[r-2][c] == board[r-3][c]){
+	if ((board[r][c] == board[r - 1][c]) && (board[r][c] == board[r - 2][c]) && (board[r][c] == board[r - 3][c]) && (board[r][c] != '_')){
 		return true;
 	}
 		else{
@@ -177,7 +179,7 @@ bool Vertical(int r, int c){
 bool DownDiagonal(int r, int c){
 	int x = 6;
 	r = r - x;
-	if (board[r][c] == board[r + 1][c + 1] == board[r + 2][c + 2] == board[r + 3][c + 3]){
+	if ((board[r][c] == board[r + 1][c + 1]) && (board[r][c] == board[r + 2][c + 2]) && (board[r][c] == board[r + 3][c + 3]) && (board[r][c] != '_')){
 		return true;
 	}
 	else{
@@ -191,15 +193,15 @@ int Winner() {
 	bool winner;
 	for (int i = 7; i >= 1; i--) {
 		for (int j = 1; j <= 7; j++) {
-			//winner = UpDiagonal(i, j);
+			winner = UpDiagonal(i, j);
 			if (winner == true){
 				return 1;
 			}
-			//winner = DownDiagonal(i, j);
+			winner = DownDiagonal(i, j);
 			if (winner == true){
 				return 1;
 			}
-			//winner = Vertical(i, j);
+			winner = Vertical(i, j);
 			if (winner == true){
 				return 1;
 			}
@@ -213,7 +215,10 @@ int Winner() {
 	}
 	
 }
-
+void clearScreen(){
+	sleep(5);
+	cout <<"\e[2J\e[H";
+}
 
 
 
@@ -231,12 +236,14 @@ int main() {
 		//Winner Checking
 		result = Winner();
 		cout << result << endl;
+		//clearScreen();
 		p2.setColumn();
 		//Display
 		DisplayBoard();
 		//check winner function
 		result = Winner();
 		cout << result << endl;
+		clearScreen();
 		if (hold >= 49) {
 			cout << "No winner" << endl;
 			break;
