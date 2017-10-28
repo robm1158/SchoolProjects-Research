@@ -32,6 +32,7 @@ public:
 	bool CheckDrop(int columnNumber, char player);
 protected:
 	int column;
+	char PlayerLetter;
 };
 
 class Board :public Player {
@@ -151,6 +152,7 @@ void DisplayBoard()
 		cout << endl;
 	}
 }
+// Below are the functions needed to check every possable win on the board created.
 bool UpDiagonal(int r, int c){
 	if ((board[r][c] == board[r - 1][c + 1]) && (board[r][c] == board[r - 2][c + 2]) && (board[r][c] == board[r - 3][c + 3]) && (board[r][c] != '_')){
 		return true;
@@ -177,18 +179,19 @@ bool Vertical(int r, int c){
 		}
 }
 bool DownDiagonal(int r, int c){
-	int x = 6;
-	r = r - x;
+	//int x = 6;
+	//r = r - x;
 	if ((board[r][c] == board[r + 1][c + 1]) && (board[r][c] == board[r + 2][c + 2]) && (board[r][c] == board[r + 3][c + 3]) && (board[r][c] != '_')){
 		return true;
 	}
 	else{
-		x--;
+		//x--;
 		return false;
 	}
 
 
 }
+//Implimentation and scanning the board using the functions above.
 int Winner() {
 	bool winner;
 	for (int i = 7; i >= 1; i--) {
@@ -215,6 +218,7 @@ int Winner() {
 	}
 	
 }
+//Most likely not going to use this...
 void clearScreen(){
 	sleep(5);
 	cout <<"\e[2J\e[H";
@@ -236,6 +240,9 @@ int main() {
 		//Winner Checking
 		result = Winner();
 		cout << result << endl;
+		if (result == 1){
+			break;
+		}
 		//clearScreen();
 		p2.setColumn();
 		//Display
@@ -243,7 +250,7 @@ int main() {
 		//check winner function
 		result = Winner();
 		cout << result << endl;
-		clearScreen();
+		//clearScreen();
 		if (hold >= 49) {
 			cout << "No winner" << endl;
 			break;
